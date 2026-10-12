@@ -1,0 +1,5 @@
+# Rename to .worktreeinclude to copy these gitignored files into every worktree
+# Claude Code creates (--worktree, subagent worktrees, Desktop parallel sessions).
+# Syntax: .gitignore patterns. Only files that are ALSO gitignored are copied.
+.env
+.env.local

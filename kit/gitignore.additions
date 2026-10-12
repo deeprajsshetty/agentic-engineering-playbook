@@ -1,0 +1,9 @@
+# --- agentic kit ---
+.env
+.env.*
+!.env.example
+.claude/settings.local.json
+.claude/hook.log
+.claude/worktrees/
+CLAUDE.local.md
+*.kit-new

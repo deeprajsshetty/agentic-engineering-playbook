@@ -1,0 +1,11 @@
+{
+  "name": "my-standards",
+  "version": "1.0.0",
+  "description": "Personal coding standards: API endpoints, testing, atomic commits, and CLI-first external tools.",
+  "author": {
+    "name": "deeprajsshetty"
+  },
+  "repository": "https://github.com/deeprajsshetty/agentic-engineering-playbook",
+  "license": "MIT",
+  "keywords": ["standards", "api", "testing", "conventional-commits", "cli"]
+}

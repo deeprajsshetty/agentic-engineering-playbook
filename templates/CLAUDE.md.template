@@ -1,0 +1,75 @@
+<!-- GENERATION-PROMPT:START
+Use when: the planning documents exist (or /init has produced a first draft) and you want standing orders.
+Paste into Claude Code (or a Claude.ai Project with the docs uploaded):
+
+```text
+Write CLAUDE.md for this project using the playbook's templates/CLAUDE.md.template as the structure.
+Keep it under one page (target < 80 lines). It holds standing orders and pointers only:
+identity, stack and exact commands, structure, conventions, known problems, never-do
+rules, verification policy, and a list of supporting documents with when to read each.
+If a fact already lives in PRD.md, CONTRACT.md, DESIGN.md or a context/ file, point to
+that file — do not repeat it. Base every command on package.json / CI config, not on guesses.
+Ask me about anything you cannot determine from the repo.
+```
+
+Good output: < 80 lines; every command copy-pastes and works; no paragraph duplicates another doc.
+GENERATION-PROMPT:END -->
+# CLAUDE.md — {{PROJECT_NAME}}
+
+## What this is
+[Two or three sentences: what the product does, for whom, and the one constraint that shapes everything — e.g. "API-only; no UI in this repo".]
+
+## Stack
+- [Runtime + language, e.g. Node 22, TypeScript strict]
+- [Framework, e.g. Next.js 16 App Router / Express]
+- [Data, e.g. Supabase Postgres with RLS]
+- [Hosting, e.g. Vercel]
+- New dependencies require approval in the plan.
+
+## Commands
+```bash
+npm install            # install
+npm run dev            # local dev server
+npm run typecheck      # or: npx tsc --noEmit
+npm test               # full suite — what /verify-unit runs
+npm run build          # production build
+```
+
+## Structure
+| Path | Owns |
+|---|---|
+| `[src/routes/]` | [HTTP layer only] |
+| `[src/services/]` | [business rules] |
+| `[src/db/]` | [queries] |
+| `[tests/]` | [tests, mirroring src/] |
+
+## Conventions
+- API: see `context/api-conventions.md`. Errors use `{ error: { code, message, details? } }`.
+- Tests: see `context/testing-standards.md`.
+- Files `kebab-case`; JSON fields exactly as in `CONTRACT.md`.
+
+## Known structural problems
+- [Describe current debt honestly so Claude doesn't copy it — e.g. "routes.js is 2,000 lines; new routes go in src/routes/<resource>.ts".]
+
+## Never do
+- Never commit with failing or skipped tests.
+- Never read or write `.env*` files (except `.env.example`); never hard-code credentials.
+- Never invent an endpoint, field or error code that isn't in `CONTRACT.md` — change the contract first.
+- [Project-specific prohibitions, each with a one-line reason.]
+
+## Verification policy
+- After every atomic unit: `/verify-unit [scope]` must report `UNIT VERIFIED`, then `/ship-unit`.
+- Before merging a branch: `/verify-app`, then `/audit` for feature-sized work.
+- A deploy command is not proof; production is verified by exercising live routes.
+
+## Supporting documents (read when relevant — not every session)
+| File | What | Read when |
+|---|---|---|
+| `PRD.md` | Product, users, success criteria | Scoping or prioritising |
+| `CONTRACT.md` | Endpoints, shapes, error codes, acceptance criteria | Any API or data work |
+| `BUILD_SEQUENCE.md` | Ordered atomic units + "verified when" | Starting or finishing a unit |
+| `docs/DESIGN_SPEC.md`, `docs/DESIGN.md` (or `docs/DESIGN_STANDARD.md`), `docs/MOTION_BRIEF.md` | UI states / visual system / motion | Any UI work (delete if API-only) |
+| `AUDIT_LOG.md` | Past audit findings and resolutions | Before an audit or release |
+
+## Active plugins
+- `my-standards` — personal conventions; project `context/` files take precedence.
